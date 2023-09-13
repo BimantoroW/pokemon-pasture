@@ -1,3 +1,25 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from .models import Item
 
-# Create your tests here.
+class userInterfaceTest(TestCase):
+    def test_main_url_exists(self):
+        response = Client().get('/main/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_main_template(self):
+        response = Client().get('/main/')
+        self.assertTemplateUsed(response, 'main.html')
+
+class modelTest(TestCase):
+    def setUp(self):
+        Item.objects.create(name="smurf cat",
+                            owner="the spectre",
+                            amount=3,
+                            description="we live we love we lie")
+        
+    def test_model_attributes(self):
+        item = Item.objects.get(name="smurf cat")
+        self.assertEqual(item.name, "smurf cat")
+        self.assertEqual(item.owner, "the spectre")
+        self.assertEqual(item.amount, 3)
+        self.assertEqual(item.description, "we live we love we lie")
