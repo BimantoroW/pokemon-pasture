@@ -21,23 +21,23 @@
 ### Pengertian MVC, MVT, dan MVVM, serta perbedaannya
 MVC (Model-View-Controller), MVT (Model-View-Template), dan MVVM (Model-View-ViewModel) merupakan pola arsitektur pengenmbangan *software*. Pola arsitektur ini berguna untuk memisahkan logika bisnis dengan tampilan pengguna. Pola arsitektur memberikan modularitas pada *file* proyek dan memastikan bahwa semua kode tercakup dalam *unit testing*. Hal ini memudahkan seorang *developer* untuk memelihara aplikasi dan memperluas fitur aplikasi di masa depan.
 1. MVC (Model-View-Controller)
-   1. Model
+   1. Model:
    Komponen ini menyimpan data aplikasi. Komponen ini tidak memiliki pengetahuan mengenai tampilan pengguna. Komponen ini bertanggungjawab atas penanganan *domain logic* dan komunikasi dengan *database*
-   2. View
+   2. View:
    Komponen ini adalah komponen *user interface*. Komponen ini menyediakan visualisasi data yang disimpan dalam model dan menawarkan interaksi kepada pengguna.
-   3. Controller
+   3. Controller:
    Komponen ini adalah komponen yang menjembatani *model* dan *view*. Komponen ini mengendalikan aliran data ke *model* dan memperbarui *view* apabila ada data yang berubah.
 2. MVT
-   1. Model
+   1. Model:
    Sama seperti *model* di MVC, *model* di MVT berguna untuk menyimpan data aplikasi. Komponen ini juga menangani komunikasi dengan *database*
-   2. View
+   2. View:
    *View* dalam MVT mirip dengan *controller* di MVC. *View* menjalankan logika bisnis, berinteraksi dengan *model*, dan merender template. *View* merupakan jembatan antara *model* dengan *template*. *View* menerima permintaan HTTP dan kemudian mengembalikan respons HTTP.
-   3. Template
+   3. Template:
    *Template* adalah komponen yang membuat MVT berbeda dari MVC. *Template* bertindak sebagai lapisan presentasi dan pada dasarnya adalah kode HTML yang merender data. Konten dalam *file* ini dapat bersifat statis atau dinamis.
 3. MVVM
-   1. Model
+   1. Model:
    Sama seperti MVC dan MVT, komponen *model* berguna untuk menyimpan data aplikasi. Dalam MVVM, *model* dan *viewmodel* bekerja sama untuk mendapatkan dan menyimpan data.
-   2. View
+   2. View:
    Komponen *user interface*. *View* akan memberitahukan *ViewModel* mengenai tindakan-tindakan yang dilakukan *user* agar data aplikasi dapat di-*update* apabila ada perubahan.
-   3. ViewModel
+   3. ViewModel:
    *ViewModel* mengekspos data-data yang relevan bagi *view*. Selain itu, jika *user* melakukan sesuatu seperti meng-input data, *ViewModel* akan meng-*update* komponen model. *ViewModel* mirip dengan komponen *controller* di MVC dan *view* di MVT.
