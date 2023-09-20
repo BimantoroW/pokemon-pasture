@@ -1,3 +1,5 @@
+# Tugas 2
+
 ### Cara pengimplementasian *checklist*
 1. Untuk membuat *project* saya, saya menjalankan *command* `django-admin startproject pokemon_pasture`. *Command* ini akan menghasilkan kode awal yang dibutuhkan untuk memulai *project* Django. Setelah itu, di *file* `settings.py`, tambahkan `'*'` pada `ALLOWED_HOSTS`
 2. Untuk membuat aplikasi *main*, saya menjalankan *command* `python manage.py startapp main`. *Command* ini akan menghasilkan struktur direktori dasar dari suatu aplikasi. Setelah membuat aplikasi, kita perlu mendaftarkannya ke proyek dengan cara menambahkan `main` ke `INSTALLED_APPS` di `settings.py` dalam `pokemon_pasture`
@@ -8,7 +10,7 @@
 7. Untuk men-*deploy* ke Adaptable, kita perlu membuat *repository* di GitHub terlebih dahulu. Setelah membuatnya, kita perlu mem-*push* kode kita ke *repository* itu. Jangan lupa untuk membuat file `.gitignore` agar *file* yang tidak diperlukan tidak ikut di-*push*. Kemudian, *log in* ke Adaptable.io dengan akun GitHub kita. Setelah itu, hubungkan *repository* GitHub kita ke Adaptable dan buat *app* baru di Adaptable dengan memilih proyek GitHub kita. Selanjutnya, pilih *Python App Template* untuk *template*-nya dan PostgreSQL untuk basis datanya. Kemudian, sesuaikan versi Python-nya dengan versi Python yang kita gunakan untuk mengembangkan proyek kita. Terakhir, pada *start command*, gunakan *command* `python manage.py migrate && gunicorn pokemon_pasture.wsgi`. Masukkan nama aplikasi dan centang *HTTP Listener Port* sebelum men-*deploy*.
 
 ### Bagan *request-response* Django
-![Django Request-Response Diagram](django_diagram.jpg)
+![Django Request-Response Diagram](images/tugas2/django_diagram.jpg)
 1. HTTP *request* dari *user* akan ditangkap oleh `urls.py`
 2. Kemudian, fungsi `show_view` yang kita masukkan dalam `path('path/', show_view, name='view')` akan dipanggil
 3. Apabila diperlukan, dalam fungsi itu, kita dapat mengambil data dari basis data kita melalui kelas-kelas dalam `models.py`.
@@ -41,3 +43,53 @@ MVC (Model-View-Controller), MVT (Model-View-Template), dan MVVM (Model-View-Vie
    Komponen *user interface*. *View* akan memberitahukan *ViewModel* mengenai tindakan-tindakan yang dilakukan *user* agar data aplikasi dapat di-*update* apabila ada perubahan.
    3. ViewModel:
    *ViewModel* mengekspos data-data yang relevan bagi *view*. Selain itu, jika *user* melakukan sesuatu seperti meng-input data, *ViewModel* akan meng-*update* komponen model. *ViewModel* mirip dengan komponen *controller* di MVC dan *view* di MVT.
+
+# Tugas 3
+### Perbedaan `GET` dan `POST`
+Secara umum, `GET` digunakan untuk mengirim permintaan ke server untuk meminta data atau *resource* sedangkan `POST` digunakan untuk mengirim permintaan ke server untuk membuat data baru. Adapun beberapa perbedaan lainnya adalah sebagai berikut.
+|GET|POST|
+|---|---|
+|Data dikirim melalui URL sebagai *parameter query*|Data dikirim melalui *request body* yang tidak dapat dilihat dari URL  |
+|Bersifat aman karena tidak memiliki efek samping terhadap server dan data|Tidak bersifat aman karena dapat mengubah data di server|
+|Bersifat *idempotent* karena tiap permintaan seharusnya mengembalikan hasil yang sama|Tidak bersifat *idempototent* karena melakukan permintaan yang sama berkali-kali dapat mengakibatkan pembuatan data yang tidak diinginkan|
+|Biasanya digunakan untuk mengambil halaman web, gambar, atau *resource* lainnya dari server.|Biasanya digunakan untuk mengirimkan form, meng-*upload* file, atau membuat perubahan pada data server.|
+
+### Perbedaan antara XML, JSON, dan HTML
+JSON dan XML merupakan sebuah *data interchange format* yang digunakan untuk pertukaran informasi antar aplikasi. JSON dan XML dapat memecah sebuah struktur data menjadi bentuk yang dapat dikirim dan terima berbagai aplikasi dengan mudah. Sementara itu, HTML lebih sering digunakan untuk membuat halaman web dan merender konten di browser. Secara umum, HTML biasanya tidak digunakan untuk pertukaran data meskipun HTML dapat membawa beberapa metadata dan data terstruktur dalam *file*-nya.
+Perbedaan utama antara JSON dan XML terletak pada sintaksnya. Sesuai namanya, JSON menggunakan sintaks objek dan *array* yang mirip dengan sintaks JavaScript. JSON menggunakan sintaks sederhana yang terdiri dari *key-value pairs*, di mana *key*-nya berupa *string* dan *value*-nya dapat berupa *string*, angka, objek, *array*, *boolean*, atau *null*. Sementara itu, sintaks XML mirip dengan sintaks HTML. XML menggunakan *tags* untuk mendefinisikan struktur dari data di dalamnya. *Tags* berguna untuk menyimpan elemen di dalamnya. Sedangkan elemen sendiri adalah representasi dari data yang ingin dikirim. Elemen dapat di-*nest* dalam elemen lain untuk menciptakan sebuah struktur hierarki. Karena XML menggunakan *tags*, XML cenderung lebih susah untuk dibaca dan ditulis dibanding JSON karena *tags* tersebut dapat terasa berantakan untuk dilihat.
+
+### Mengapa JSON sering digunakan?
+- JSON memiliki *native support* dari JavaScript, bahasa yang sekarang sering sekali digunakan dalam *web development*. Karena ini, JavaScript dapat mem-*parse* data JSON dengan mudah dan struktur data JSON hampir identik dengan objek dan *array* JavaScript.
+- JSON sederhana dan mudah dibaca. Seperti yang telah dijelaskan pada bagian sebelumnya, JSON menggunakan *key-value pairs* untuk menstruktur datanya sehingga membuatnya mudah untuk dibaca, ditulis, dan dipahami.
+- JSON bersifat *lightweight*. JSON tidak mengandung metadata atau hal lainnya yang tidak diperlukan sehingga muatan JSON lebih kecil dan dapat mengurangi *bandwith* dan meningkatkan *performance*.
+
+### Cara pengimplementasian *checklist*
+1. Untuk membuat input form, saya pertama-tama membuat *file* baru  `main/forms.py`. Kemudian, saya membuat *class* baru dengan nama `PokemonForm` yang merupakan *subclass* dari `django.forms.ModelForm`. Setelah itu, saya membuat *class* `Meta` di dalam *class* `PokemonForm` untuk memberi tahu formnya model apa yang akan digunakan untuk menyimpan input dari *user* dan *field* apa saja yang nanti akan ditampilkan ke *user*.
+Kemudian, di `main/views.py`, saya membuat fungsi baru untuk menampilkan form. Di dalam fungsi tersebut, saya mengecek terlebih dahulu apakah Pokémon yang diinput *user* sudah ada di *databse* atau belum. Jika sudah ada, program akan mengambil data Pokémon tersebut dari *database* dan meng-*increment* atribut `amount`-nya sebanyak satu kali. Jika belum ada, program akan membuat *record* baru dalam *database* yang berisi Pokémon baru.
+Selanjutnya, jangan lupa untuk membuat *file* HTML baru yang merupakan halaman formnya sendiri. HTML memiliki *tag* `form` yang dapat digunakan untuk membuat form. Selain itu, Django juga memiliki fitur di mana objek `Form` dapat ditampilkan di HTML sebagai tabel dengan `form.as_table`. Terakhir, buat sebuah tombol untuk mensubmit input dari *user*.
+Setelah itu semua selesai, lakukan *routing* ke halaman form agar dapat diakses dari web. Proses *routing* sama seperti proses *routing* di tugas 2.
+2. Pengimplementasian *views*
+   - HTML
+Pertama-tama, ambil data dari *databse* dengan `Item.objects.all()` dan simpan pada sebuah variabel, katakan `items`. Setelah itu, masukkan variabel `items` pada *dictionary* `context` agar nantinya dapat diakses dari HTML. Selain itu, kita juga dapat menampilkan total jumlah *item* dengan *for loop*. Gunakan kode `items.values_list(amount)` untuk mendapatkan *list* atribut jumlah dari tiap data. Kemudian, gunakan *for loop* untuk me-*loop* semua data di *list* dan menambahkannya ke variabel `total`. Saat me-*loop* tiap data, gunakan index ke-0 dari data untuk menambahkannya ke jumlah total karena tiap data di `items.values_list(amount)` merupakan sebuah tuple dan nilai jumlahnya sendiri ada di index ke-0. Setelah selesai, masukkan variabel `total` ke *dictionary* `context` juga.
+Kemudian, dari sisi HTML, kita dapat mengakses data tersebut dengan menggunakan `{{ }}`. Sebagai contoh, variabel `total` dapat diakses dan ditampilkan di HTML dengan `{{ total }}`. Kemudian, untuk menampilkan data dalam *list* `items`, kita dapat melakukan *for loop* di HTML. *For loop* dilakukan dengan `{% for item in items %}`. Selanjutnya, kita dapat mengakses atribut dari `item` sebagaimana halnya kita mengakses atribut dengan Python. Sebagai contoh, jika kita ingin mengakses atribut nama, kita gunakan `{{ item.name }}`. Data *item* dapat ditampilkan dengan menggunakan *tag* `<table>` di HTML.
+   - XML
+   Pada `main/views.py`, import `HttpResponse` dari `django.http` dan `serializers` dari `django.core`. Kemudian, buat fungsi baru. Di dalamnya, ambil data dari *database* dengan `Item.objects.all()` dan kemudian simpan dalam variabel `data`. Setelah itu, kembalikan `HttpResponse(serializers.serialize("xml", data), content_type="application/xml")`.
+   - JSON
+   Proses mengembalikan JSON sama seperti XML, kecuali di bagian terakhir. Untuk JSON, kembalikan `HttpResponse(serializers.serialize("json", data), content_type="application/json")`
+   - XML by ID
+   Buat fungsi yang selain menerima argumen `request`, juga menerima argumen `id`. Kemudian, data diambil dari *database* berdasarkan ID *primary key*-nya. Hal itu dilakukan dengan `Item.objects.filter(pk=id)`. Kemudian, kembalikan HTTP response seperti biasa dengan `HttpResponse(serializers.serialize("xml", data), content_type="application/xml")`
+   - JSON by ID
+   Proses sama seperti XML by ID, tetapi kembalikan response dalam bentuk JSON, yaitu `HttpResponse(serializers.serialize("json", data), content_type="application/json")`
+3. Untuk melakukan *routing*, pertama-tama *import* semua fungsi *views* yang telah dibuat ke dalam `main/urls.py`. Kemudian, untuk HTML, JSON, dan XML, kita dapat lakukan *routing* seperti pada tugas 2 dengan menambahkan `path('path/', view_method_name, name='view_name')` ke dalam `urlpatterns`. Sebagai contoh, untuk menambahkan *view* JSON, kita gunakan `path('json/', show_json, name='json')`. Kemudian, untuk melakukan *routing* untuk JSON by ID dan XML by ID, kita dapat mendapatkan parameter dari URL dengan menggunakan *angle brackets* atau `<>`. Sebagai contoh, untuk mendapatkan ID yang diperlukan untuk JSON by ID, kita gunakan `path('json/<int:id>', show_json_by_id, name='json_by_id')`. Kode `<int:id>` akan memproses input dari URL dan mengkonversikannya menjadi sebuah variabel *integer* yang nantinya akan dioper ke fungsi `show_json_by_id`.
+
+### *Screenshot* Postman
+- HTML
+![postman-html](images/tugas3/postman-html.png)
+- JSON
+![postman-json](images/tugas3/postman-json.png)
+- XML
+![postman-xml](images/tugas3/postman-xml.png)
+- JSON by ID (id=3)
+![postman-json-by-id](images/tugas3/postman-json-by-id.png)
+- XML by ID (id=3)
+![postman-xml-by-id](images/tugas3/postman-xml-by-id.png)

@@ -1,75 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-  * {
-  box-sizing: border-box;
-}
+{% extends 'base.html' %}
 
-/* Create three unequal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-}
+{% block content %}
+  <h1>Pokémon Pasture</h1>
 
-.small {
-  width: 15%;
-}
+  <hr/>
 
-.wide {
-  width: 55%;
-}
+  <h3>Bimantoro Widyadana (2206824306) - PBP E</h3>
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-</style>
-</head>
-<body>
+  <h3>You currently have {{ total }} Pokémon in your pasture</h3>
 
-<h1>Pokémon Pasture</h1>
+  <table>
+    <tr>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Owned</th>
+        <th>Description</th>
+    </tr>
 
-<hr/>
+    {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.owner }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.description }}</td>
+        </tr>
+    {% endfor %}
+  </table>
 
-<h3>Bimantoro Widyadana (2206824306) - PBP E</h3>
+  <br />
 
-<h3>Pokémon count: {{ item_count }}</h3>
-
-<div class="row">
-    <div class="column small">
-        <h3>Name</h3>
-    </div>
-    <div class="column small">
-        <h3>Owner</h3>
-    </div>
-    <div class="column small">
-        <h3>Amount Caught</h3>
-    </div>
-    <div class="column wide">
-        <h3>Description</h3>
-    </div>
-</div>
-
-{% for item in items %}
-<div class="row">
-    <div class="column small">
-        <p>{{ item.name }}</p>
-    </div>
-    <div class="column small">
-        <p>{{ item.owner }}</p>
-    </div>
-    <div class="column small">
-        <p>{{ item.amount }}</p>
-    </div>
-    <div class="column wide">
-        <p>{{ item.description }}</p>
-    </div>
-</div>
-{% endfor %}
-
-</body>
-</html>
+  <a href="{% url 'main:catch_pokemon' %}">
+    <button>
+        Catch Pokémon!
+    </button>
+  </a>
+{% endblock content %}
