@@ -56,6 +56,7 @@ Secara umum, `GET` digunakan untuk mengirim permintaan ke server untuk meminta d
 
 ### Perbedaan antara XML, JSON, dan HTML
 JSON dan XML merupakan sebuah *data interchange format* yang digunakan untuk pertukaran informasi antar aplikasi. JSON dan XML dapat memecah sebuah struktur data menjadi bentuk yang dapat dikirim dan terima berbagai aplikasi dengan mudah. Sementara itu, HTML lebih sering digunakan untuk membuat halaman web dan merender konten di browser. Secara umum, HTML biasanya tidak digunakan untuk pertukaran data meskipun HTML dapat membawa beberapa metadata dan data terstruktur dalam *file*-nya.
+
 Perbedaan utama antara JSON dan XML terletak pada sintaksnya. Sesuai namanya, JSON menggunakan sintaks objek dan *array* yang mirip dengan sintaks JavaScript. JSON menggunakan sintaks sederhana yang terdiri dari *key-value pairs*, di mana *key*-nya berupa *string* dan *value*-nya dapat berupa *string*, angka, objek, *array*, *boolean*, atau *null*. Sementara itu, sintaks XML mirip dengan sintaks HTML. XML menggunakan *tags* untuk mendefinisikan struktur dari data di dalamnya. *Tags* berguna untuk menyimpan elemen di dalamnya. Sedangkan elemen sendiri adalah representasi dari data yang ingin dikirim. Elemen dapat di-*nest* dalam elemen lain untuk menciptakan sebuah struktur hierarki. Karena XML menggunakan *tags*, XML cenderung lebih susah untuk dibaca dan ditulis dibanding JSON karena *tags* tersebut dapat terasa berantakan untuk dilihat.
 
 ### Mengapa JSON sering digunakan?
