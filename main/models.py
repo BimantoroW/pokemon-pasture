@@ -1,10 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Item(models.Model):
+class Pokemon(models.Model):
     name = models.CharField(max_length=255)
-    owner = models.CharField(max_length=255)
-    amount = models.IntegerField(default=1)
+    pokedex_number = models.IntegerField()
     description = models.TextField()
 
     def __str__(self) -> str:
-        return f"{self.name} - {self.owner}"
+        return f"{self.name}"
+
+class CaughtPokemon(models.Model):
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=1)

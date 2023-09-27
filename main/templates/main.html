@@ -5,33 +5,68 @@
 
   <hr/>
 
-  <h3>Bimantoro Widyadana (2206824306) - PBP E</h3>
+  <h3>Welcome, {{ name }} - PBP E</h3>
 
   <h3>You currently have {{ total }} Pokémon in your pasture</h3>
 
   <table>
     <tr>
         <th>Name</th>
-        <th>Owner</th>
         <th>Owned</th>
         <th>Description</th>
     </tr>
 
     {% for item in items %}
         <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.owner }}</td>
+          {% with pk=item.pk %}
+            <td>{{ item.pokemon.name }}</td>
             <td>{{ item.amount }}</td>
-            <td>{{ item.description }}</td>
+            <td>{{ item.pokemon.description }}</td>
+            <td>
+              <a href="{% url 'main:increment' id=pk %}">
+                <button>
+                  Catch Again
+                </button>
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'main:decrement' id=pk %}">
+                <button>
+                  Release
+                </button>
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'main:remove' id=pk %}">
+                <button>
+                  Release All
+                </button>
+              </a>
+            </td>
+          {% endwith %}
         </tr>
     {% endfor %}
   </table>
 
   <br />
 
+  <h5>Sesi terakhir login: {{ last_login }}</h5>
+
+  <a href="{% url 'main:create_pokemon' %}">
+    <button>
+        Create Pokémon!
+    </button>
+  </a>
+
   <a href="{% url 'main:catch_pokemon' %}">
     <button>
         Catch Pokémon!
+    </button>
+  </a>
+
+  <a href="{% url 'main:logout' %}">
+    <button>
+        Logout
     </button>
   </a>
 {% endblock content %}

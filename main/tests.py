@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from .models import Item
+from .models import Pokemon
 
 class userInterfaceTest(TestCase):
     def test_main_url_exists(self):
@@ -12,13 +12,13 @@ class userInterfaceTest(TestCase):
 
 class modelTest(TestCase):
     def setUp(self):
-        Item.objects.create(name="smurf cat",
+        Pokemon.objects.create(name="smurf cat",
                             owner="the spectre",
                             amount=3,
                             description="we live we love we lie")
         
     def test_model_attributes(self):
-        item = Item.objects.get(name="smurf cat")
+        item = Pokemon.objects.get(name="smurf cat")
         self.assertEqual(item.name, "smurf cat")
         self.assertEqual(item.owner, "the spectre")
         self.assertEqual(item.amount, 3)

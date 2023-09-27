@@ -1,7 +1,14 @@
 from django.forms import ModelForm
-from main.models import Item
+from django import forms
+from main.models import Pokemon, CaughtPokemon
 
-class PokemonForm(ModelForm):
+class CreatePokemonForm(ModelForm):
     class Meta:
-        model = Item
-        fields = ["name", "owner", "description"]
+        model = Pokemon
+        fields = ["name", "pokedex_number", "description"]
+
+class CatchPokemonForm(ModelForm):
+    class Meta:
+        model = CaughtPokemon
+        fields = ["pokemon"]
+    pokemon = forms.ModelChoiceField(queryset=Pokemon.objects.order_by("pokedex_number"), required=True)

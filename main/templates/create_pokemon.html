@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Create a new Pokémon</h1>
+
+<p id="err-msg">Pokémon already exists!</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Create!"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script>
+    var errMsg = document.getElementById("err-msg");
+    var hasError = {{ has_error|yesno:"true,false" }}
+    if (hasError) {
+        errMsg.style.display = "block";
+    }
+    else {
+        errMsg.style.display = "none";
+    }
+</script>
+{% endblock %}
