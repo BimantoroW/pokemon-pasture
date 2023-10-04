@@ -1,72 +1,85 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Pokémon Pasture</h1>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'main:main' %}">Pokémon Pasture</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" href="{% url 'main:main' %}">Home</a>
+          <a class="nav-link" href="{% url 'main:create_pokemon' %}">Create Pokémon</a>
+          <a class="nav-link" href="{% url 'main:catch_pokemon' %}">Catch Pokémon</a>
+        </div>
+      </div>
+      <a class="btn btn-primary" role="button" href="{% url 'main:logout' %}">Logout</a>
+    </div>
+</nav>
+
+<br/>
+
+<div class="container">
+  <h1 class="text-center">Pokémon Pasture</h1>
 
   <hr/>
 
-  <h3>Welcome, {{ name }} - PBP E</h3>
+  <h3 class="text-start">Welcome, {{ name }} - PBP E</h3>
 
-  <h3>You currently have {{ total }} Pokémon in your pasture</h3>
+  <p class="text-start">You currently have {{ total }} Pokémon in your pasture</p>
 
-  <table>
-    <tr>
-        <th>Name</th>
-        <th>Owned</th>
-        <th>Description</th>
-    </tr>
+  <div class="container-fluid">
+    <div class="row my-2">
+      <div class="col-2">
+        <h5 class="text-center">Name</h5>
+      </div>
+      <div class="col-2">
+        <h5 class="text-center">Owned</h5>
+      </div> 
+      <div class="col-4">
+        <h5 class="text-center">Description</h5>
+      </div>
+    </div>
 
     {% for item in items %}
-        <tr>
-          {% with pk=item.pk %}
-            <td>{{ item.pokemon.name }}</td>
-            <td>{{ item.amount }}</td>
-            <td>{{ item.pokemon.description }}</td>
-            <td>
-              <a href="{% url 'main:increment' id=pk %}">
-                <button>
-                  Catch Again
-                </button>
-              </a>
-            </td>
-            <td>
-              <a href="{% url 'main:decrement' id=pk %}">
-                <button>
-                  Release
-                </button>
-              </a>
-            </td>
-            <td>
-              <a href="{% url 'main:remove' id=pk %}">
-                <button>
-                  Release All
-                </button>
-              </a>
-            </td>
-          {% endwith %}
-        </tr>
+    <div class="row my-2" {% if forloop.last %}style="background-color: darkkhaki;"{% endif %}>
+      {% with pk=item.pk %}
+      <div class="col-2">
+        <p class="text-center">{{ item.pokemon.name }}</p>
+      </div>
+      <div class="col-2">
+        <p class="text-center">{{ item.amount }}</p>
+      </div>
+      <div class="col-4">
+        <p class="text-center text-wrap">{{ item.pokemon.description }}</p>
+      </div>
+      <div class="col-1 d-flex justify-content-center">
+        <a class="btn btn-primary" href="{% url 'main:increment' id=pk %}" role="button">Catch Again</a>
+      </div>
+      <div class="col-1 align-items-center d-flex justify-content-center">
+        <a class="btn btn-warning" href="{% url 'main:decrement' id=pk %}" role="button">Release</a>
+      </div>
+      <div class="col-1 d-flex justify-content-center">
+        <a class="btn btn-danger" href="{% url 'main:remove' id=pk %}" role="button">Release All</a>
+      </div>
+      <div class="col-1 align-items-center d-flex justify-content-center">
+        <a class="btn btn-secondary" href="{% url 'main:edit_pokemon' id=pk %}" role="button">Edit</a>
+      </div>
+      {% endwith %}
+    </div>
     {% endfor %}
-  </table>
-
-  <br />
-
-  <h5>Sesi terakhir login: {{ last_login }}</h5>
-
-  <a href="{% url 'main:create_pokemon' %}">
-    <button>
-        Create Pokémon!
-    </button>
-  </a>
-
-  <a href="{% url 'main:catch_pokemon' %}">
-    <button>
-        Catch Pokémon!
-    </button>
-  </a>
-
-  <a href="{% url 'main:logout' %}">
-    <button>
-        Logout
-    </button>
-  </a>
+    <div class="row my-2">
+      <p class="text-start">Sesi terakhir login: {{ last_login }}</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-2">
+        <a class="btn btn-primary" href="{% url 'main:create_pokemon' %}" role="button">Create Pokémon!</a>
+      </div>
+      <div class="col-2">
+        <a class="btn btn-primary" href="{% url 'main:catch_pokemon' %}" role="button">Catch Pokémon!</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}

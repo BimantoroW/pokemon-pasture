@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render
 from .models import Pokemon, CaughtPokemon
 from django.http import HttpResponse, HttpResponseRedirect
-from main.forms import CreatePokemonForm, CatchPokemonForm
+from main.forms import CreatePokemonForm, CatchPokemonForm, RegisterForm
 from django.urls import reverse
 from django.core import serializers
 from django.shortcuts import redirect
@@ -64,6 +64,15 @@ def catch_pokemon(request):
     context = { 'form': form }
     return render(request, 'catch_pokemon.html', context)
 
+def edit_pokemon(request, id):
+    pokemon = Pokemon.objects.get(pk=id)
+    form = CreatePokemonForm(request.POST or None, instance=pokemon)
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:main'))
+    context = {'form': form}
+    return render(request, 'edit_pokemon.html', context)
+
 def increment_pokemon(request, id):
     pokemon = CaughtPokemon.objects.get(pk=id)
     pokemon.amount += 1
@@ -101,10 +110,10 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
 def register(request):
-    form = UserCreationForm()
+    form = RegisterForm()
 
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your account has been successfully created!')

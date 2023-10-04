@@ -1,18 +1,32 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<h1>Catch a new Pokémon</h1>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'main:main' %}">Pokémon Pasture</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="{% url 'main:main' %}">Home</a>
+            <a class="nav-link" href="{% url 'main:create_pokemon' %}">Create Pokémon</a>
+            <a class="nav-link active" href="{% url 'main:catch_pokemon' %}">Catch Pokémon</a>
+          </div>
+        </div>
+        <a class="btn btn-primary" role="button" href="{% url 'main:logout' %}">Logout</a>
+      </div>
+</nav>
 
-<form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Catch!"/>
-            </td>
-        </tr>
-    </table>
-</form>
+<br/>
+
+<div class="container">
+<h1 class="text-center">Catch a new Pokémon</h1>
+<hr/>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Catch!">
+    </form>
+</div>
 {% endblock %}

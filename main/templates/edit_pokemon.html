@@ -1,4 +1,6 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
+
+{% load static %}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -10,7 +12,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link" href="{% url 'main:main' %}">Home</a>
-            <a class="nav-link active" href="{% url 'main:create_pokemon' %}">Create Pokémon</a>
+            <a class="nav-link" href="{% url 'main:create_pokemon' %}">Create Pokémon</a>
             <a class="nav-link" href="{% url 'main:catch_pokemon' %}">Catch Pokémon</a>
           </div>
         </div>
@@ -21,29 +23,16 @@
 <br/>
 
 <div class="container">
-    <h1 class="text-center">Create a new Pokémon</h1>
+    <h1 class="text-center">Edit Pokémon</h1>
 
     <hr/>
-
-    <p id="err-msg">Pokémon already exists!</p>
 
     <div class="form-group">
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <input class="btn btn-primary" type="submit" value="Catch!">
+            <input class="btn btn-primary" type="submit" value="Finish">
         </form>
     </div>
 </div>
-
-<script>
-    var errMsg = document.getElementById("err-msg");
-    var hasError = {{ has_error|yesno:"true,false" }}
-    if (hasError) {
-        errMsg.style.display = "block";
-    }
-    else {
-        errMsg.style.display = "none";
-    }
-</script>
 {% endblock %}

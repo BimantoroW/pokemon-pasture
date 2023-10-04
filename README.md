@@ -115,3 +115,40 @@ Secara singkat, autentikasi adalah proses untuk memastikan identitas seorang *us
    Di `main/models.py`, import `User` dari `django.contrib.auth.models`. Kemudian, kita dapat menghubungkan Pokemon yang telah ditangkap dengan pemiliknya dengan menambahkan *Foreign Key* yang merujuk ke objek `User` di model `CaughtPokemon`. Hal tersebut dilakukan dengan cara menambahkan atribut `owner = models.ForeignKey(User, on_delete=models.CASCADE)` di model `CaughtPokemon`. Setelah itu, lakukan migrasi dengan `makemigrations` dan `migrate`. Masukkan nilai default jika perlu.
    - Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
    Untuk menampilkan username yang sedang login, kita tambahkan kode `'name': request.user.username` di dictionary `context` pada fungsi `show_main`. Untuk menerapkan *last login*, kita pertama-tama harus menambahkan *cookie* *last login* saat *user* melakukan login dengan cara `response.set_cookie('last_login', str(datetime.datetime.now()))`. Setelah itu, kita bisa mengambil data tersebut di fungsi `show_main` dengan menambahkan pada dictionary context kode berikut `'last_login': request.COOKIES['last_login']`. Kita bisa menampilkan `name` dan `last_login` pada HTML seperti biasa menggunakan `{{}}`. Terakhir, saat logout, jangan lupa untuk menghapus *cookie* dengan cara `response.delete_cookie('last_login')`.
+
+# Tugas 5
+1. Manfaat dan kapan waktu menggunakan *element selector* di CSS
+   - Element selector\
+   Element selector memilih elemen HTML berdasarkan namanya. Gunakan ini ketika ingin mengubah atribut dari semua elemen HTML setipe.
+   - ID Selector\
+   ID selector memilih elemen HTML berdasarkan atribut ID-nya. Karena ID elemen selalu unik dalam sebuah halaman, kita dapat menggunakan ini untuk mengubah atribut dari satu elemen HTML saja.
+   - Class selector\
+   Class selector memilih elemen HTML berdasarkan atribut class-nya. Kita dapat menggunakan selector ini untuk memilih banyak elemen sekaligus yang termasuk dalam suatu kelas tertentu.
+2. Tag HTML5
+   - `<!DOCTYPE>`: Mendefinisikan tipe dokumen
+   - `<html>`: Mendefinisikan dokumen HTML
+   - `<head>`: Memuat metadata/informasi mengenai dokumen
+   - `<title>`:  Judul untuk dokumen
+   - `<body>`: Mendefinisikan *body* dari dokumen
+   - `<h1>` sampai `<h6>`: HTML headings
+   - `<p>`: Paragraf
+   - `<br>`: Baris kosong
+   - `<hr>`: Garis horizontal
+   - `<!--...-->`: Komentar
+   - `<form>`: Mendefinisikan form untuk input user
+   - `<input>`: Elemen input
+   - `<button>`: Tombol yang dapat diklik
+   - `<img>`: Mendefinisikan sebuah gambar
+3. Perbedaan antara margin dan padding
+Margin adalah ruang yang mengililingi border sebuah elemen sedangkan padding adalah ruang antara border sebuah elemen dengan kontennya. Margin digunakan untuk menggerakkan sebuah elemen ke atas, bawah, kiri, atau kanan. Padding menentukan bagaimana konten ditampilkan dalam suatu container.
+4. Perbedaan antara Bootstrap dan Tailwind, serta kapan menggunkannya
+Perbedaan utama antara Bootstrap dan Tailwind adalah di fleksibilitas dan kustomisasinya. Boostrap adalah framework CSS yang disertakan dengan gaya dan komponen UI yang sudah di-design sebelumnya. Bootstrap bersifat lebih kaku karena Bootstrap memberikan tampilan dan struktur yang telah ditentukan sebelumnya bagi website kita. Di sisi lain, Tailwind menggunakan pendekatan yang mengutamakan utilitas. Berbeda dengan Bootstrap, Tailwind tidak memberi penggunanya komponen-komponen UI yang telah ditentukan terlebih dahulu. Tailwind memberi penggunanya sekumpulan *utility classes* yang dapat kita gunakan untuk men-*style* elemen-elemen HTML. Jadi, jika kita lebih ingin menggunakan framework yang sudah siap digunakan dan kita tidak terlalu mementingkan *styling*-nya, kita dapat menggunakan Bootstrap. Jika kita ingin framework yang lebih *customizable* dan memberi penggunanya kendali lebih besar terhadap desainnya, kita dapat menggunakan Tailwind.
+5. Implementasi checklist
+Untuk kustomisasi desain, saya menggunakan framework Bootstrap.
+   -  Halaman login, register, dan tambah inventori
+   Ketiga halaman ini merupakan input form sehingga kustomisasinya mirip satu sama lain. Untuk ketiga halaman, semua elemen disimpan dalam satu elemen div utama yang menggunakan class "container"\
+   Untuk halaman login, karena Django tidak menyediakan form login seperti halnya form register (UserCreationForm), halaman login langsung dikustomisasi di HTML-nya. Saya menggunakan kelas "form-label" untuk tulisan-tulisan statis, seperti Username dan Password. Kemudian, untuk isian username dan password itu sendiri, saya menggunakan kelas "form-control"\
+   Untuk halaman register, saya membuat kelas baru yang merupakan turunan dari UserCreationForm untuk mengkustomisasinya. Di konstruktornya, saya tambahakan kode `self.fields['username'].widget.attrs['class'] = 'form-control'` untuk memasukkan elemen input username ke kelas "form-control". Saya lakukan hal yang sama untuk field password1 dan password2.
+   Untuk halaman tambah inventori, saya menambahkan variabel `widgets` di class form-nya. Variabel tersebut merupakan *dictionary* dengan *key* berupa *fields* dari form-nya, dan *value*-nya berupa elemen HTML yang disediakan Django, seperti `forms.TextInput(attrs={'class': 'form-control'})`. Di atributnya, seperti di dua halaman di atas, saya menggunakan kelas "form-control".
+   - Untuk halaman daftar inventori, saya merapihkan elemen-elemen di dalamnya, seperti menaruh judul, tabel, dan tombol-tombolnya di tengah. Saya melakukan hal tersebut dengan menggunakan kelas-kelas seperti `"text-center"`, `"align-items-center"`, `"d-flex"`, dan  `"justify-content-center"`. Selain itu, saya juga mengganti *style* dan warna tombol dengan kelas-kelas seperti `"btn-primary"`, `"btn-secondary"`, `"btn-warning"`, dan `"btn-danger"`
+
