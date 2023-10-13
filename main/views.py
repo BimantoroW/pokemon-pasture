@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render
 from .models import Pokemon, CaughtPokemon
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from main.forms import CreatePokemonForm, CatchPokemonForm, RegisterForm
 from django.urls import reverse
 from django.core import serializers
@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -141,3 +142,46 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def get_all_pokemon_ajax(request):
+    pokemon = Pokemon.objects.all()
+    return HttpResponse(serializers.serialize('json', pokemon))
+
+def get_caught_pokemon_ajax(request):
+    caught_pokemon = CaughtPokemon.objects.filter(owner=request.user).order_by("pokemon__pokedex_number")
+    return HttpResponse(serializers.serialize('json', caught_pokemon))
+
+def get_pokemon_by_id(request, id):
+    pokemon = Pokemon.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize('json', pokemon))
+
+@csrf_exempt
+def create_pokemon_ajax(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        pokedex_number = request.POST.get("pokedex_number")
+        description = request.POST.get("description")
+
+        if not Pokemon.objects.filter(name=name).exists():
+            new_pokemon = Pokemon(name=name, pokedex_number=pokedex_number, description=description)
+            new_pokemon.save()
+        
+        return HttpResponse(b"CREATED", status=201)
+    
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def catch_pokemon_ajax(request):
+    if request.method == "POST":
+        pk = request.POST.get("pokemon_pk")
+        print("asdasd")
+        pokemon = Pokemon.objects.get(pk=pk)
+        caught_pokemon = CaughtPokemon(pokemon=pokemon)
+        caught_pokemon.owner = request.user
+        query_set = CaughtPokemon.objects.filter(pokemon=pokemon).filter(owner=request.user)
+        if query_set.exists():
+            caught_pokemon = query_set.get(pokemon=pokemon)
+            caught_pokemon.amount += 1
+        caught_pokemon.save()
+        return HttpResponse(b"CREATED", status=201)
+    return HttpResponseNotFound()

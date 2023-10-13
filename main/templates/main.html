@@ -30,56 +30,170 @@
   <p class="text-start">You currently have {{ total }} Pokémon in your pasture</p>
 
   <div class="container-fluid">
-    <div class="row my-2">
-      <div class="col-2">
-        <h5 class="text-center">Name</h5>
-      </div>
-      <div class="col-2">
-        <h5 class="text-center">Owned</h5>
-      </div> 
-      <div class="col-4">
-        <h5 class="text-center">Description</h5>
-      </div>
-    </div>
-
-    {% for item in items %}
-    <div class="row my-2" {% if forloop.last %}style="background-color: darkkhaki;"{% endif %}>
-      {% with pk=item.pk %}
-      <div class="col-2">
-        <p class="text-center">{{ item.pokemon.name }}</p>
-      </div>
-      <div class="col-2">
-        <p class="text-center">{{ item.amount }}</p>
-      </div>
-      <div class="col-4">
-        <p class="text-center text-wrap">{{ item.pokemon.description }}</p>
-      </div>
-      <div class="col-1 d-flex justify-content-center">
-        <a class="btn btn-primary" href="{% url 'main:increment' id=pk %}" role="button">Catch Again</a>
-      </div>
-      <div class="col-1 align-items-center d-flex justify-content-center">
-        <a class="btn btn-warning" href="{% url 'main:decrement' id=pk %}" role="button">Release</a>
-      </div>
-      <div class="col-1 d-flex justify-content-center">
-        <a class="btn btn-danger" href="{% url 'main:remove' id=pk %}" role="button">Release All</a>
-      </div>
-      <div class="col-1 align-items-center d-flex justify-content-center">
-        <a class="btn btn-secondary" href="{% url 'main:edit_pokemon' id=pk %}" role="button">Edit</a>
-      </div>
-      {% endwith %}
-    </div>
-    {% endfor %}
+    <div id="card_pokemon" class="row"></div>
+    
     <div class="row my-2">
       <p class="text-start">Sesi terakhir login: {{ last_login }}</p>
     </div>
     <div class="row justify-content-center">
       <div class="col-2">
-        <a class="btn btn-primary" href="{% url 'main:create_pokemon' %}" role="button">Create Pokémon!</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create_modal">Create Pokémon!</button>
       </div>
       <div class="col-2">
-        <a class="btn btn-primary" href="{% url 'main:catch_pokemon' %}" role="button">Catch Pokémon!</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#catch_modal">Catch Pokémon!</button>
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="create_modal" tabindex="-1" aria-labelledby="create_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="create_modal_label">Create New Pokémon</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="create_form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pokedex_number" class="col-form-label">Pokedex Number:</label>
+                        <input type="number" class="form-control" id="pokedex_number" name="pokedex_number"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_create" data-bs-dismiss="modal">Create</button>
+            </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="modal fade" id="catch_modal" tabindex="-1" aria-labelledby="catch_modal_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="catch_modal_label">Create New Pokémon</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="catch_form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="pokemon_pk" class="col-form-label">Pokémon:</label>
+                        <select name="pokemon_pk" id="pokemon_pk"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_catch" data-bs-dismiss="modal">Catch</button>
+            </div>
+        </div>
+      </div>
+  </div>
 </div>
+
+<script>
+  async function getCaughtPokemon() {
+    return fetch("{% url 'main:get_caught_pokemon_ajax' %}").then((res) => res.json())
+  }
+
+  async function getAllPokemon() {
+    return fetch("{% url 'main:get_all_pokemon_ajax' %}").then((res) => res.json())
+  }
+
+  async function getPokemonData(id) {
+    return fetch("{% url 'main:get_pokemon_by_id' 9999 %}".replace(9999, id)).then((res) => res.json())
+  }
+
+  async function refreshPokemon() {
+    document.getElementById("card_pokemon").innerHTML = "";
+    let htmlString = "";
+    const pokemon = await getCaughtPokemon()
+
+    for (let i = 0; i < pokemon.length; i++) {
+      let current = pokemon[i];
+      let currentData = await getPokemonData(current.fields.pokemon)
+      currentData = currentData[0]
+      var url_increment = "{% url 'main:increment' 9999 %}".replace(9999, current.pk)
+      var url_decrement = "{% url 'main:decrement' 9999 %}".replace(9999, current.pk)
+      var url_delete = "{% url 'main:remove' 9999 %}".replace(9999, current.pk)
+      var url_edit = "{% url 'main:edit_pokemon' 9999 %}".replace(9999, currentData.pk)
+      var lastStyle = ""
+      if (i == pokemon.length - 1) {
+        lastStyle = 'style="background-color: darkkhaki;"'
+      }
+      htmlString += `
+      <div class="col-xxl-3 col-xl-4 col-lg-6">
+        <div class="card">
+          <div class="card-body" ${lastStyle}>
+            <h5 class="card-title text-center">${currentData.fields.name}</h5>
+            <h6 class="card-subtitle mb-2 text-muted text-center">${current.fields.amount} caught</h6>
+            <p class="card-text text-center">${currentData.fields.description}</p>
+            <div class="row my-2">
+              <div class="col">
+                <a style="width: 100%;" href=${url_increment} class="btn btn-primary">Catch Again</a>
+              </div>
+              <div class="col">
+                <a style="width: 100%;" href=${url_decrement} class="btn btn-warning">Release</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <a style="width: 100%;" href=${url_delete} class="btn btn-danger">Release All</a>
+              </div>
+              <div class="col">
+                <a style="width: 100%;" href=${url_edit} class="btn btn-secondary">Edit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`
+    }
+    document.getElementById("card_pokemon").innerHTML = htmlString
+  }
+
+  function createPokemon() {
+    fetch("{% url 'main:create_pokemon_ajax' %}", {
+      method: "POST",
+      body: new FormData(document.getElementById("create_form"))
+    }).then(populateDropdown)
+
+    document.getElementById("create_form").reset()
+    return false
+  }
+
+  function catchPokemon() {
+    fetch("{% url 'main:catch_pokemon_ajax' %}", {
+      method: "POST",
+      body: new FormData(document.getElementById("catch_form"))
+    }).then(refreshPokemon)
+
+    return false
+  }
+
+  async function populateDropdown() {
+    const dropdown = document.getElementById("pokemon_pk")
+    dropdown.innerHTML = ""
+    var htmlString = ""
+    const pokemon = await getAllPokemon()
+    pokemon.forEach(element => {
+      htmlString += `<option value="${element.pk}">${element.fields.name}</option>`
+    })
+    dropdown.innerHTML = htmlString
+  }
+  populateDropdown()
+  refreshPokemon()
+  document.getElementById("button_create").onclick = createPokemon
+  document.getElementById("button_catch").onclick = catchPokemon
+</script>
 {% endblock content %}
