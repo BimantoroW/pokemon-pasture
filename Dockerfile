@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    DJANGO_SETTINGS_MODULE=shopping_list.settings \
+    DJANGO_SETTINGS_MODULE=pokemon_pasture.settings \
     PORT=8000 \
     WEB_CONCURRENCY=2
 
