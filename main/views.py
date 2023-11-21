@@ -25,7 +25,7 @@ def show_main(request):
         'name': request.user.username,
         'items': items,
         'total': total,
-        'last_login': request.COOKIES['last_login']
+        'last_login': request.COOKIES['last_login'] if request != None else ""
     }
 
     return render(request, 'main.html', context)
