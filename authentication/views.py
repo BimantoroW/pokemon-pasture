@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
@@ -7,9 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def login(request):
-    data = json.loads(request.body)
-    username = data['username']
-    password = data['password']
+    username = request.POST['username']
+    password = request.POST['password']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
@@ -37,9 +35,9 @@ def login(request):
 def register(request):
     username = request.POST["username"]
     password = request.POST["password"]
-    user = User(username=username, password=password)
-    if not User.objects.filter(username=user.username).exists():
-        user.save()
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_user(username=username,
+                                 password=password)
         return JsonResponse({
             "status": True,
             "message": "Register sukses!",
@@ -47,7 +45,7 @@ def register(request):
     else:
         return JsonResponse({
             "status": False,
-            "message": f"User dengan username {user.username} sudah ada"
+            "message": f"User dengan username {username} sudah ada"
         })
     
 @csrf_exempt
