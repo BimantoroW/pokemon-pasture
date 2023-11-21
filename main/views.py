@@ -193,14 +193,12 @@ def create_pokemon_flutter(request):
         
         data = json.loads(request.body)
 
-        new_product = Pokemon.objects.create(
+        Pokemon.objects.create(
             user = request.user,
             name = data["name"],
             price = int(data["pokdex_number"]),
             description = data["description"]
         )
-
-        new_product.save()
 
         return JsonResponse({"status": "success"}, status=200)
     else:

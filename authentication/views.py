@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -29,6 +30,23 @@ def login(request):
             "status": False,
             "message": "Login gagal, periksa kembali email atau kata sandi."
         }, status=401)
+
+@csrf_exempt
+def register(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = User(username=username, password=password)
+    if not User.objects.filter(username=user.username).exists():
+        user.save()
+        return JsonResponse({
+            "status": True,
+            "message": "Register sukses!",
+        }, status=200)
+    else:
+        return JsonResponse({
+            "status": False,
+            "message": f"User dengan username {user.username} sudah ada"
+        })
     
 @csrf_exempt
 def logout(request):
