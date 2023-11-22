@@ -103,8 +103,9 @@ def show_json(request):
     data = Pokemon.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
-def show_caught_json(response):
-    data = CaughtPokemon.objects.all()
+@csrf_exempt
+def show_caught_json(request):
+    data = CaughtPokemon.objects.filter(owner=request.user)
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
 def show_xml_by_id(request, id):
@@ -198,12 +199,34 @@ def create_pokemon_flutter(request):
         data = json.loads(request.body)
 
         Pokemon.objects.create(
-            user = request.user,
             name = data["name"],
-            price = int(data["pokdex_number"]),
+            pokedex_number = int(data["pokedex_number"]),
             description = data["description"]
         )
 
         return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+@csrf_exempt
+def catch_pokemon_flutter(request):
+    if request.method == 'POST':
+        print('asdasd')
+        data = json.loads(request.body)
+        pokemon_set = Pokemon.objects.filter(name=data["name"])
+        if pokemon_set.exists():
+            caught_pokemon = CaughtPokemon(
+                pokemon=pokemon_set.get(name=data["name"]),
+                owner=request.user
+            )
+            caught_set = CaughtPokemon.objects.filter(pokemon=caught_pokemon.pokemon, owner=caught_pokemon.owner)
+            if caught_set.exists():
+                caught_pokemon = caught_set.get(pokemon=caught_pokemon.pokemon)
+                caught_pokemon.amount += 1
+            caught_pokemon.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+        else:
+            return JsonResponse({"status": "error"}, status=402)
     else:
         return JsonResponse({"status": "error"}, status=401)

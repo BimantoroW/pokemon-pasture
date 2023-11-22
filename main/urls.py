@@ -10,7 +10,7 @@ urlpatterns = [
     path('xml/', show_xml, name='xml'),
     path('xml/<int:id>', show_xml_by_id, name='xml_by_id'),
     path('json/', show_json, name='json'),
-    path('json/<int:id>', show_json_by_id, name='json_by_id'),
+    path('json/<int:id>/', show_json_by_id, name='json_by_id'),
     path('json-caught/', show_caught_json, name='caught_json'),
     path('register/', register, name='register'),
     path('login/', login_user, name='login'),
@@ -24,5 +24,6 @@ urlpatterns = [
     path('create-pokemon-ajax/', create_pokemon_ajax, name='create_pokemon_ajax'),
     path('catch-pokemon-ajax', catch_pokemon_ajax, name='catch_pokemon_ajax'),
     path('get-pokemon', get_all_pokemon_ajax, name='get_all_pokemon_ajax'),
-    path('create-flutter', create_pokemon_flutter, name='create_pokemon_flutter'),
+    path('create-flutter/', create_pokemon_flutter, name='create_pokemon_flutter'),
+    path('catch-flutter/', catch_pokemon_flutter, name='catch_pokemon_flutter'),
 ]
