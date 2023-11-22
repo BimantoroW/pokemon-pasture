@@ -103,6 +103,10 @@ def show_json(request):
     data = Pokemon.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
+def show_caught_json(response):
+    data = CaughtPokemon.objects.all()
+    return HttpResponse(serializers.serialize('json', data), content_type='application/json')
+
 def show_xml_by_id(request, id):
     data = Pokemon.objects.filter(pk=id)
     return HttpResponse(serializers.serialize('xml', data), content_type='application/xml')
